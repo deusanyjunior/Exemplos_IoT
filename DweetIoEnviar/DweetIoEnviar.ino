@@ -3,6 +3,7 @@
 
 String nomeDaCoisa = "HardwareLivreUSP";
 const char* host = "dweet.io";
+const int httpPort = 80;
 
 int led = 2;
 
@@ -51,8 +52,7 @@ void conectarWiFi() {
 void dweetDado() {
   Serial.println("\nInício da conexão.");
 
-  WiFiClient client; 
-  const int httpPort = 80;  
+  WiFiClient client;
   if (!client.connect(host, httpPort)) { 
     Serial.println("Falha de conexão com o Dweet.io!"); 
     return; 
@@ -62,11 +62,11 @@ void dweetDado() {
   
   client.print(msgEnviarHTTPDweet()); 
   delay(10);
-  // Lê a resposta do Dweet.io e exibe na saída Serial
-  while(client.available()){ 
-    String line = client.readStringUntil('\r'); 
-    Serial.print(line); 
-  }
+  
+  Serial.println("Enviado!");
+  
+  // Desconectar
+  client.stop();
   
   Serial.println();  
   Serial.println("Fim da conexão."); 
