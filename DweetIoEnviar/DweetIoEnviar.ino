@@ -1,7 +1,7 @@
 #include "keys.h"
-#include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h> // Versão 2.6.0
 
-String nomeDaCoisa = "HardwareLivreUSP";
+String nomeDaCoisa = "djota";
 const char* host = "dweet.io";
 const int httpPort = 80;
 
@@ -11,19 +11,24 @@ String nomeDoCampo = "dado";
 int valorDoCampo = 0;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600);  
+  pinMode(led, OUTPUT);
 
   // WiFi
-  if (mudarMAC)
+  if (mudarMAC) {
     wifi_set_macaddr(STATION_IF, MAC); // Define novo endereço de MAC
-  conectarWiFi(); // Configura o Wifi
-  
-  pinMode(led, OUTPUT);
+  }
 }
 
 void loop() {
+  // WiFi
+  if (WiFi.status() != WL_CONNECTED) {
+    conectarWifi();
+  }
+  
   // Define o valor do campo
   valorDoCampo = valorDoCampo + 1;
+  
   // Envia o valor do campo
   dweetDado();
 
@@ -59,21 +64,22 @@ void dweetDado() {
   }
 
   Serial.println("Conectado!");
-  
-  client.print(msgEnviarHTTPDweet()); 
-  delay(10);
-  
+
+  // Prepara a mensagem e envia
+  client.print( msgEnviarHTTPDweet() ); 
+   
   Serial.println("Enviado!");
   
   // Desconectar
   client.stop();
   
   Serial.println();  
-  Serial.println("Fim da conexão."); 
+  Serial.println("Fim da conexão.");
+  delay(1000);
 } 
 
 // Prepara a mensagem de envio para o Dweet.io
-// Segue o padrão: https://dweet.io/dweet/for/my-thing-name?hello=world&foo=bar
+// Segue o padrão: https://dweet.io/dweet/for/my-thing-name?hello=world
 String msgEnviarHTTPDweet() {
   String dweetHttpGet = "GET /dweet/for/";
   dweetHttpGet = dweetHttpGet + String( nomeDaCoisa ) + "?";

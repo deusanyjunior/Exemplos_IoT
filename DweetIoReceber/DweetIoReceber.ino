@@ -1,5 +1,5 @@
 #include "keys.h"
-#include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h> // Versão 2.6.0
 #include <ArduinoJson.h> // Versão 6.13.0
 
 String nomeDaCoisa = "HardwareLivreUSP";
@@ -10,19 +10,19 @@ int led = 2;
 
 void setup() {
   Serial.begin(9600);
+  pinMode(led, OUTPUT);
 
   // WiFi
-  if (mudarMAC)
+  if (mudarMAC) {
     wifi_set_macaddr(STATION_IF, MAC); // Define novo endereço de MAC
-  conectarWiFi(); // Configura o Wifi
-  
-  pinMode(led, OUTPUT);
+  }
 }
 
 void loop() {
-  // Define o valor do campo
-  valorDoCampo = valorDoCampo + 1;
-
+  // WiFi
+  if (WiFi.status() != WL_CONNECTED) {
+    conectarWifi();
+  }
   // Recebe o último valor enviado
   dweetDado();
 
@@ -60,16 +60,18 @@ void dweetDado() {
 
   Serial.println("Conectado!");
   
-  client.print(msgReceberHTTPDweet()); 
-  delay(10);
-  
+  // Prepara a mensagem e envia
+  client.print(msgReceberHTTPDweet());
+
+  // Decodifica a mensagem recebida
   decodificaRespostaDweet(client);
   
   // Desconectar
   client.stop();
   
   Serial.println();  
-  Serial.println("Fim da conexão."); 
+  Serial.println("Fim da conexão.");
+  delay(1000); 
 } 
 
 // Prepara a mensagem de envio para o Dweet.io
