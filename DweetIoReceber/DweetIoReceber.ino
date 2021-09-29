@@ -2,7 +2,7 @@
 #include <ESP8266WiFi.h> // Versão 2.6.0
 #include <ArduinoJson.h> // Versão 6.13.0
 
-String nomeDaCoisa = "HardwareLivreUSP";
+String nomeDaCoisa = "Ocean";
 const char* host = "dweet.io";
 const int httpPort = 80;
 
@@ -21,7 +21,7 @@ void setup() {
 void loop() {
   // WiFi
   if (WiFi.status() != WL_CONNECTED) {
-    conectarWifi();
+    conectarWiFi();
   }
   // Recebe o último valor enviado
   dweetDado();
@@ -122,7 +122,7 @@ void decodificaRespostaDweet(WiFiClient client) {
     return;
   }  
   JsonObject conteudo = doc["with"][0];
-  const char* coisa = conteudo["thing"]; // "HardwareLivreUSP"
+  const char* coisa = conteudo["thing"]; // "Ocean"
   const char* dataDeCriacao = conteudo["created"]; // "2019-11-04T13:22:33.516Z"  
   int dado = conteudo["content"]["dado"]; // valor do dado lido
   Serial.print("Dado lido: ");
