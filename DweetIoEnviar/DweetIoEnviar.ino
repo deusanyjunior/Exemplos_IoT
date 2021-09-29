@@ -1,7 +1,7 @@
 #include "keys.h"
 #include <ESP8266WiFi.h> // Versão 2.6.0
 
-String nomeDaCoisa = "djota";
+String nomeDaCoisa = "Ocean";
 const char* host = "dweet.io";
 const int httpPort = 80;
 
@@ -23,7 +23,7 @@ void setup() {
 void loop() {
   // WiFi
   if (WiFi.status() != WL_CONNECTED) {
-    conectarWifi();
+    conectarWiFi();
   }
   
   // Define o valor do campo
